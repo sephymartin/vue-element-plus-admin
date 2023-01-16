@@ -1,0 +1,1 @@
+import{k as t,l as s}from"./useI18n-d79c1d65.js";const i=t("dict",{state:()=>({isSetDict:!1,dictObj:{}}),getters:{getDictObj(){return this.dictObj},getIsSetDict(){return this.isSetDict}},actions:{setDictObj(t){this.dictObj=t},setIsSetDict(t){this.isSetDict=t}}}),e=()=>i(s);export{i as a,e as u};

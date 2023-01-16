@@ -1,0 +1,1 @@
+import{E as r,ao as a}from"./useI18n-d79c1d65.js";import{k as e,u as s,R as o,at as t}from"./runtime-core.esm-bundler-9826e6ce.js";const n={prefix:Math.floor(1e4*Math.random()),current:0},m=Symbol("elIdInjection"),u=()=>o()?t(m,n):n,c=o=>{const t=u(),n=r("namespace",a);return e((()=>s(o)||`${n.value}-id-${t.prefix}-${t.current++}`))};export{u as a,c as u};
