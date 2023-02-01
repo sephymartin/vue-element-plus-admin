@@ -10,7 +10,7 @@ import { useAppStore } from '@/store/modules/app'
 import { usePermissionStore } from '@/store/modules/permission'
 import { useRouter } from 'vue-router'
 import type { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router'
-import { UserType } from '@/api/login/types'
+import { UserType, UserLoginType } from '@/api/login/types'
 import { useValidator } from '@/hooks/web/useValidator'
 import { FormSchema } from '@/types/form'
 
@@ -55,7 +55,7 @@ const schema = reactive<FormSchema[]>([
   {
     field: 'password',
     label: t('login.password'),
-    value: 'admin',
+    value: 'admin123',
     component: 'InputPassword',
     colProps: {
       span: 24
@@ -124,8 +124,7 @@ const signIn = async () => {
     if (isValid) {
       loading.value = true
       const { getFormData } = methods
-      const formData = await getFormData<UserType>()
-
+      const formData = await getFormData<UserLoginType>()
       try {
         const res = await loginApi(formData)
 
@@ -143,6 +142,8 @@ const signIn = async () => {
             push({ path: redirect.value || permissionStore.addRouters[0].path })
           }
         }
+      } catch (e) {
+        console.log(e)
       } finally {
         loading.value = false
       }
@@ -153,7 +154,7 @@ const signIn = async () => {
 // 获取角色信息
 const getRole = async () => {
   const { getFormData } = methods
-  const formData = await getFormData<UserType>()
+  const formData = await getFormData<UserLoginType>()
   const params = {
     roleName: formData.username
   }
