@@ -25,7 +25,8 @@ const setDefaultTheme = () => {
     return
   }
   const isDarkTheme = isDark()
-  appStore.setIsDark(isDarkTheme)
+  // appStore.setIsDark(isDarkTheme)
+  appStore.setIsDark(false)
 }
 
 setDefaultTheme()
