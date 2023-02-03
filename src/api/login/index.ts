@@ -6,11 +6,11 @@ interface RoleParams {
 }
 
 export const loginApi = (data: UserLoginType): Promise<IResponse<UserType>> => {
-  return request.post({ url: '/admin/login', data })
+  return request.post({ url: '/login', data })
 }
 
 export const loginOutApi = (): Promise<IResponse> => {
-  return request.get({ url: '/admin/logout' })
+  return request.get({ url: '/logout' })
 }
 
 export const getUserListApi = ({ params }: AxiosConfig) => {

@@ -2,8 +2,8 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table } from '@/components/Table'
-import { getUserListApi } from '@/api/login'
-import { UserType } from '@/api/login/types'
+import { querySysUser } from '@/api/system'
+import { SysUserDTO } from '@/api/system/types'
 import { ref, h } from 'vue'
 import { ElButton } from 'element-plus'
 import { TableColumn, TableSlotDefault } from '@/types/table'
@@ -29,14 +29,14 @@ const columns: TableColumn[] = [
     field: 'password',
     label: t('userDemo.password')
   },
-  {
-    field: 'role',
-    label: t('userDemo.role')
-  },
+  // {
+  //   field: 'role',
+  //   label: t('userDemo.role')
+  // },
   {
     field: 'remark',
     label: t('userDemo.remark'),
-    formatter: (row: UserType) => {
+    formatter: (row: SysUserDTO) => {
       return h(
         'span',
         row.username === 'admin' ? t('userDemo.remarkMessage1') : t('userDemo.remarkMessage2')
@@ -51,19 +51,19 @@ const columns: TableColumn[] = [
 
 const loading = ref(true)
 
-let tableDataList = ref<UserType[]>([])
+let tableDataList = ref<SysUserDTO[]>([])
 
 const getTableList = async (params?: Params) => {
-  const res = await getUserListApi({
+  const res = await querySysUser({
     params: params || {
-      pageIndex: 1,
+      page: 1,
       pageSize: 10
     }
   })
-  // .catch(() => {})
-  // .finally(() => {
-  //   loading.value = false
-  // })
+    .catch(() => {})
+    .finally(() => {
+      loading.value = false
+    })
   if (res) {
     tableDataList.value = res.list
   }

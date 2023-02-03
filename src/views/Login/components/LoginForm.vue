@@ -127,7 +127,6 @@ const signIn = async () => {
       const formData = await getFormData<UserLoginType>()
       try {
         const res = await loginApi(formData)
-
         if (res) {
           wsCache.set(appStore.getUserInfo, res.data)
           // 是否使用动态路由
@@ -160,6 +159,7 @@ const getRole = async () => {
   }
   // admin - 模拟后端过滤菜单
   // test - 模拟前端过滤菜单
+  console.log(formData)
   const res =
     formData.username === 'admin' ? await getAdminRoleApi(params) : await getTestRoleApi(params)
   if (res) {
