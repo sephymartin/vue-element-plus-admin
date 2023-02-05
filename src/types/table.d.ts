@@ -34,3 +34,10 @@ export interface TableSetPropsType {
   path: string
   value: any
 }
+
+export interface TableResponse<T = any> {
+  total: number
+  list: T[]
+  pageNum: number
+  pageSize: number
+}

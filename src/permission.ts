@@ -37,11 +37,11 @@ router.beforeEach(async (to, from, next) => {
 
       if (!dictStore.getIsSetDict) {
         // 获取所有字典
-        const res = await getDictApi()
-        if (res) {
-          dictStore.setDictObj(res.data)
-          dictStore.setIsSetDict(true)
-        }
+        // const res = await getDictApi()
+        // if (res) {
+        //   dictStore.setDictObj(res.data)
+        //   dictStore.setIsSetDict(true)
+        // }
       }
 
       // 开发者可根据实际情况进行修改

@@ -1,27 +1,21 @@
+import download from '@/utils/download'
 import { Table, TableExpose } from '@/components/Table'
 import { ElTable, ElMessageBox, ElMessage } from 'element-plus'
 import { ref, reactive, watch, computed, unref, nextTick } from 'vue'
 import { get } from 'lodash-es'
 import type { TableProps } from '@/components/Table/src/types'
 import { useI18n } from '@/hooks/web/useI18n'
-import { TableSetPropsType } from '@/types/table'
-
+import { TableResponse, TableSetPropsType } from '@/types/table'
 const { t } = useI18n()
-
-interface TableResponse<T = any> {
-  total: number
-  list: T[]
-  pageNumber: number
-  pageSize: number
-}
 
 interface UseTableConfig<T = any> {
   getListApi: (option: any) => Promise<IResponse<TableResponse<T>>>
   delListApi?: (option: any) => Promise<IResponse>
+  exportListApi?: (option: any) => Promise<T>
   // 返回数据格式配置
-  response: {
+  response?: {
     list: string
-    total?: string
+    total: string
   }
   // 默认传递的参数
   defaultParams?: Recordable
@@ -35,10 +29,13 @@ interface TableObject<T = any> {
   tableList: T[]
   params: any
   loading: boolean
+  exportLoading: boolean
   currentRow: Nullable<T>
 }
 
 export const useTable = <T = any>(config?: UseTableConfig<T>) => {
+  const responseProp = { ...(config?.response || { list: 'list', total: 'total' }) }
+
   const tableObject = reactive<TableObject<T>>({
     // 页数
     pageSize: 10,
@@ -54,6 +51,8 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     },
     // 加载中
     loading: true,
+    // 导出加载中
+    exportLoading: false,
     // 当前行的数据
     currentRow: null
   })
@@ -62,7 +61,7 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     return {
       ...tableObject.params,
       pageSize: tableObject.pageSize,
-      pageIndex: tableObject.currentPage
+      pageNum: tableObject.currentPage
     }
   })
 
@@ -131,8 +130,8 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
         tableObject.loading = false
       })
       if (res) {
-        tableObject.tableList = get(res.data || {}, config?.response.list as string)
-        tableObject.total = get(res.data || {}, config?.response?.total as string) || 0
+        tableObject.tableList = get(res.data || {}, responseProp.list as string)
+        tableObject.total = get(res.data || {}, responseProp.total as string) || 0
       }
     },
     setProps: async (props: TableProps = {}) => {
@@ -182,6 +181,24 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
       } else {
         await delData(ids)
       }
+    },
+    // 导出列表
+    exportList: async (fileName: string) => {
+      tableObject.exportLoading = true
+      ElMessageBox.confirm(t('common.exportMessage'), t('common.confirmTitle'), {
+        confirmButtonText: t('common.ok'),
+        cancelButtonText: t('common.cancel'),
+        type: 'warning'
+      })
+        .then(async () => {
+          const res = await config?.exportListApi?.(unref(paramsObj) as unknown as T)
+          if (res) {
+            download.excel(res as unknown as Blob, fileName)
+          }
+        })
+        .finally(() => {
+          tableObject.exportLoading = false
+        })
     }
   }
 

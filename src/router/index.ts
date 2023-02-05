@@ -542,6 +542,35 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
         }
       }
     ]
+  },
+  {
+    path: '/system',
+    component: Layout,
+    redirect: '/system/sys-user',
+    name: 'SysUser',
+    meta: {
+      title: '系统管理',
+      icon: 'eos-icons:role-binding',
+      alwaysShow: true
+    },
+    children: [
+      {
+        path: 'sys-user',
+        component: () => import('@/views/System/SysUser.vue'),
+        name: 'SysUser',
+        meta: {
+          title: t('router.user')
+        }
+      }
+      // {
+      //   path: 'role',
+      //   component: () => import('@/views/Authorization/Role.vue'),
+      //   name: 'Role',
+      //   meta: {
+      //     title: t('router.role')
+      //   }
+      // }
+    ]
   }
 ]
 

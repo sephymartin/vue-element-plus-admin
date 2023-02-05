@@ -1,9 +1,9 @@
 import axios, {
   AxiosInstance,
-  AxiosRequestConfig,
   AxiosRequestHeaders,
   AxiosResponse,
-  AxiosError
+  AxiosError,
+  InternalAxiosRequestConfig
 } from 'axios'
 
 import qs from 'qs'
@@ -24,7 +24,7 @@ const service: AxiosInstance = axios.create({
 
 // request拦截器
 service.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     if (
       config.method === 'post' &&
       (config.headers as AxiosRequestHeaders)['Content-Type'] ===
@@ -65,8 +65,7 @@ service.interceptors.response.use(
     } else if (response.data.code === result_code) {
       return response.data
     } else {
-      console.log(response.data.code)
-      ElMessage.error(response.data.message)
+      ElMessage.error(response.data.message || '系统错误')
     }
   },
   (error: AxiosError) => {
